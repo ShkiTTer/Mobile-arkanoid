@@ -9,8 +9,8 @@ abstract class GameObject(private val bitmap: Bitmap) {
     var y = 0
     var width = 0
     var height = 0
-    private val screenWidth = Resources.getSystem().displayMetrics.widthPixels
-    private val screenHeight = Resources.getSystem().displayMetrics.heightPixels
+    protected val screenWidth = Resources.getSystem().displayMetrics.widthPixels
+    protected val screenHeight = Resources.getSystem().displayMetrics.heightPixels
 
     init {
         width = bitmap.width
