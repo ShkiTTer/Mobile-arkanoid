@@ -9,6 +9,9 @@ class Player(bitmap: Bitmap): GameObject(bitmap) {
         private const val VELOCITY = 10
     }
 
+    private var xVelocity = VELOCITY
+    private var yVelocity = -VELOCITY
+
     init {
         x = screenWidth / 2
         y = screenHeight - height - BOTTOM_MARGIN
@@ -16,5 +19,13 @@ class Player(bitmap: Bitmap): GameObject(bitmap) {
 
     override fun update() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    fun reverceVelocityX() {
+        xVelocity = -xVelocity
+    }
+
+    fun reverceVelocityY() {
+        yVelocity = -yVelocity
     }
 }
