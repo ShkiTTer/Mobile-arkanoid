@@ -17,7 +17,7 @@ import com.example.game.presentation.objects.Player
 
 class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback {
     private val gameThread: GameThread
-    private val player = Player(context.getDrawable(R.drawable.paddle)!!.toBitmap())
+    private val player = Player(context, context.getDrawable(R.drawable.paddle)!!.toBitmap())
     private val ball = Ball(context.getDrawable(R.drawable.ball)!!.toBitmap())
     private val bricks = mutableListOf<Brick>()
 
