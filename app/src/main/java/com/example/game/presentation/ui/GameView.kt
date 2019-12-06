@@ -1,6 +1,7 @@
 package com.example.game.presentation.ui
 
 import android.content.Context
+import android.content.res.Resources
 import android.graphics.Canvas
 import android.view.SurfaceHolder
 import android.view.SurfaceView
@@ -17,6 +18,9 @@ class GameView(context: Context): SurfaceView(context), SurfaceHolder.Callback {
     private val ball = Ball(context.getDrawable(R.drawable.ball)!!.toBitmap())
     private val bricks = mutableListOf<Brick>()
 
+    private val screenWidth = Resources.getSystem().displayMetrics.widthPixels
+    private val screenHeight = Resources.getSystem().displayMetrics.heightPixels
+
     init {
         holder.addCallback(this)
 
@@ -24,7 +28,7 @@ class GameView(context: Context): SurfaceView(context), SurfaceHolder.Callback {
     }
 
     override fun surfaceChanged(holder: SurfaceHolder?, format: Int, width: Int, height: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
     }
 
     override fun surfaceCreated(holder: SurfaceHolder?) {
@@ -35,8 +39,10 @@ class GameView(context: Context): SurfaceView(context), SurfaceHolder.Callback {
         gameThread.stop()
     }
 
-    override fun draw(canvas: Canvas) {
+    override fun draw(canvas: Canvas?) {
         super.draw(canvas)
+
+        canvas ?: return
 
         player.draw(canvas)
         ball.draw(canvas)
@@ -49,5 +55,16 @@ class GameView(context: Context): SurfaceView(context), SurfaceHolder.Callback {
     fun update() {
         player.update()
         ball.update()
+
+        if (ball.x + ball.width >= screenWidth || ball.x == 0) ball.reverceVelocityX()
+        if (ball.y <= 0) ball.reverceVelocityY()
+    }
+
+    fun startGame() {
+        gameThread.start()
+    }
+
+    fun stopGame() {
+        gameThread.stop()
     }
 }
