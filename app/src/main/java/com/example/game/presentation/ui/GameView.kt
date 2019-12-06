@@ -3,6 +3,9 @@ package com.example.game.presentation.ui
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.PixelFormat
+import android.graphics.PorterDuff
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import androidx.core.graphics.drawable.toBitmap
@@ -12,7 +15,7 @@ import com.example.game.presentation.objects.Ball
 import com.example.game.presentation.objects.Brick
 import com.example.game.presentation.objects.Player
 
-class GameView(context: Context): SurfaceView(context), SurfaceHolder.Callback {
+class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback {
     private val gameThread: GameThread
     private val player = Player(context.getDrawable(R.drawable.paddle)!!.toBitmap())
     private val ball = Ball(context.getDrawable(R.drawable.ball)!!.toBitmap())
@@ -25,6 +28,8 @@ class GameView(context: Context): SurfaceView(context), SurfaceHolder.Callback {
         holder.addCallback(this)
 
         gameThread = GameThread(holder, this)
+        setZOrderOnTop(true)
+        holder.setFormat(PixelFormat.TRANSPARENT)
     }
 
     override fun surfaceChanged(holder: SurfaceHolder?, format: Int, width: Int, height: Int) {
@@ -43,6 +48,8 @@ class GameView(context: Context): SurfaceView(context), SurfaceHolder.Callback {
         super.draw(canvas)
 
         canvas ?: return
+
+        canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
 
         player.draw(canvas)
         ball.draw(canvas)
