@@ -62,9 +62,6 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback 
     fun update() {
         player.update()
         ball.update()
-
-        if (ball.x + ball.width >= screenWidth || ball.x == 0) ball.reverceVelocityX()
-        if (ball.y <= 0) ball.reverceVelocityY()
     }
 
     fun startGame() {
