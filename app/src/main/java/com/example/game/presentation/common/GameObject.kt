@@ -17,8 +17,6 @@ abstract class GameObject(private val bitmap: Bitmap) {
         height = bitmap.height
     }
 
-    abstract fun update()
-
     fun draw(canvas: Canvas) {
         canvas.drawBitmap(bitmap, x.toFloat(), y.toFloat(), null)
     }
