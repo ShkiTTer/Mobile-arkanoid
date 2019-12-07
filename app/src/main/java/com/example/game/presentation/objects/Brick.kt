@@ -3,7 +3,7 @@ package com.example.game.presentation.objects
 import android.graphics.Bitmap
 import com.example.game.presentation.common.GameObject
 
-class Brick(bitmap: Bitmap, private var hp: Int, x: Int, y: Int) : GameObject(bitmap) {
+class Brick(bitmap: Bitmap, val destroyPoints: Int, var hp: Int, x: Int, y: Int) : GameObject(bitmap) {
     var isAlive = true
         private set
 
@@ -14,5 +14,9 @@ class Brick(bitmap: Bitmap, private var hp: Int, x: Int, y: Int) : GameObject(bi
 
     fun destroy() {
         isAlive = false
+    }
+
+    fun hit() {
+        hp--
     }
 }

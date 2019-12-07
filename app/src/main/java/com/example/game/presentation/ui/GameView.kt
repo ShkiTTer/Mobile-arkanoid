@@ -14,8 +14,9 @@ import com.example.game.presentation.common.GameThread
 import com.example.game.presentation.objects.Ball
 import com.example.game.presentation.objects.Brick
 import com.example.game.presentation.objects.Player
+import com.example.game.presentation.viewmodel.MainViewModel
 
-class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback {
+class GameView(context: Context, private val viewModel: MainViewModel) : SurfaceView(context), SurfaceHolder.Callback {
     private val gameThread: GameThread
     private val player = Player(context, context.getDrawable(R.drawable.paddle)!!.toBitmap())
     private val ball = Ball(context.getDrawable(R.drawable.ball)!!.toBitmap())
@@ -35,7 +36,7 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback 
 
         val brickImage = context.getDrawable(R.drawable.element_green_rectangle)!!.toBitmap()
 
-        val brick = Brick(brickImage, 1, screenWidth / 2, 100)
+        val brick = Brick(brickImage, 1, 1, screenWidth / 2, 100)
         bricks.add(brick)
     }
 
@@ -62,7 +63,7 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback 
         ball.draw(canvas)
 
         bricks.forEach {
-            it.draw(canvas)
+            if (it.isAlive) it.draw(canvas)
         }
     }
 
@@ -82,10 +83,16 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback 
 
         for (brick in bricks) {
             if (ball.right >= brick.left && ball.left <= brick.right && ball.top >= brick.top && ball.bottom <= brick.bottom) {
-                brick.destroy()
+                brick.hit()
 
                 if (ball.top >= brick.top && ball.bottom <= brick.bottom) ball.reverceVelocityX()
                 if (ball.left >= brick.left && ball.right <= brick.right) ball.reverceVelocityY()
+
+                if (brick.hp == 0) {
+                    viewModel.increaseScore(brick.destroyPoints)
+                    brick.destroy()
+                    break
+                }
             }
         }
     }

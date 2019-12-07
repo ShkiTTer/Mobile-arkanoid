@@ -12,7 +12,7 @@ import kotlin.coroutines.CoroutineContext
 
 class GameThread(private val holder: SurfaceHolder, private val gameView: GameView): CoroutineScope {
     companion object {
-        private const val FPS = 60
+        private const val FPS = 30
         private const val TARGET_TIME = 1000L / FPS
 
         private var canvas: Canvas? = null
