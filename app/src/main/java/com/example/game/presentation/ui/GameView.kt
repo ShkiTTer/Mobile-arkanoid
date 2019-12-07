@@ -35,10 +35,7 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback 
 
         val brickImage = context.getDrawable(R.drawable.element_green_rectangle)!!.toBitmap()
 
-        val brick = Brick(brickImage, 1).apply {
-            x = screenWidth / 3
-            y = width
-        }
+        val brick = Brick(brickImage, 1, screenWidth / 2, 100)
         bricks.add(brick)
     }
 
@@ -73,13 +70,22 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback 
         player.update()
         ball.update()
 
-        if (ball.y + ball.height >= screenHeight) {
+        if (ball.bottom >= screenHeight) {
             gameThread.stop()
         }
 
-        if (ball.y + ball.height >= player.y) {
-            if (ball.x + ball.width / 2 >= player.x && ball.x + ball.width / 2 <= player.x + player.width) {
+        if (ball.bottom >= player.top) {
+            if (ball.centerX >= player.left && ball.centerX <= player.right) {
                 ball.reverceVelocityY()
+            }
+        }
+
+        for (brick in bricks) {
+            if (ball.right >= brick.left && ball.left <= brick.right && ball.top >= brick.top && ball.bottom <= brick.bottom) {
+                brick.destroy()
+
+                if (ball.top >= brick.top && ball.bottom <= brick.bottom) ball.reverceVelocityX()
+                if (ball.left >= brick.left && ball.right <= brick.right) ball.reverceVelocityY()
             }
         }
     }

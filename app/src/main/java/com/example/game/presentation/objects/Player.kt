@@ -7,11 +7,12 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import com.example.game.presentation.common.GameObject
+import kotlin.math.absoluteValue
 
 class Player(private val context: Context, bitmap: Bitmap) : GameObject(bitmap), IMovable, SensorEventListener {
     companion object {
         private const val BOTTOM_MARGIN = 20
-        private const val VELOCITY = 10
+        private const val VELOCITY = 5
     }
 
     private val sensor: Sensor
@@ -31,7 +32,10 @@ class Player(private val context: Context, bitmap: Bitmap) : GameObject(bitmap),
         event ?: return
 
         val speed = event.values[2]
-        xVelocity = -(VELOCITY * speed).toInt()
+
+        if (xVelocity.absoluteValue < 20) {
+            xVelocity += -(VELOCITY * speed).toInt()
+        }
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {

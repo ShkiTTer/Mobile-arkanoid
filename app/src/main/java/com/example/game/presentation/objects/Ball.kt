@@ -13,8 +13,10 @@ class Ball(bitmap: Bitmap): GameObject(bitmap), IMovable {
         y = screenHeight / 2
     }
 
-    private var xVelocity = VELOCITY
-    private var yVelocity = - VELOCITY
+    var xVelocity = VELOCITY
+        private set
+    var yVelocity = - VELOCITY
+        private set
 
     override fun update() {
         if (x <= 0 || x + width >= screenWidth) reverceVelocityX()
