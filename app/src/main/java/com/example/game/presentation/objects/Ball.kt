@@ -3,7 +3,7 @@ package com.example.game.presentation.objects
 import android.graphics.Bitmap
 import com.example.game.presentation.common.GameObject
 
-class Ball(bitmap: Bitmap): GameObject(bitmap), IMovable {
+class Ball(bitmap: Bitmap): GameObject(bitmap) {
     companion object {
         private const val VELOCITY = 10
     }
@@ -19,18 +19,18 @@ class Ball(bitmap: Bitmap): GameObject(bitmap), IMovable {
         private set
 
     override fun update() {
-        if (x <= 0 || x + width >= screenWidth) reverceVelocityX()
-        if (y <= 0) reverceVelocityY()
+        if (x <= 0 || x + width >= screenWidth) reverseVelocityX()
+        if (y <= 0) reverseVelocityY()
 
         x += xVelocity
         y += yVelocity
     }
 
-    fun reverceVelocityX() {
+    fun reverseVelocityX() {
         xVelocity = -xVelocity
     }
 
-    fun reverceVelocityY() {
+    fun reverseVelocityY() {
         yVelocity = -yVelocity
     }
 }

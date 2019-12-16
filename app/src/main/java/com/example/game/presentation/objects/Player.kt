@@ -9,7 +9,7 @@ import android.hardware.SensorManager
 import com.example.game.presentation.common.GameObject
 import kotlin.math.absoluteValue
 
-class Player(private val context: Context, bitmap: Bitmap) : GameObject(bitmap), IMovable, SensorEventListener {
+class Player(private val context: Context, bitmap: Bitmap) : GameObject(bitmap), SensorEventListener {
     companion object {
         private const val BOTTOM_MARGIN = 20
         private const val VELOCITY = 5

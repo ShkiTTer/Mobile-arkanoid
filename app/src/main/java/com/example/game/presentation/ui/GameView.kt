@@ -15,17 +15,26 @@ import com.example.game.presentation.objects.Ball
 import com.example.game.presentation.objects.Brick
 import com.example.game.presentation.objects.Player
 import com.example.game.presentation.viewmodel.MainViewModel
+import kotlinx.coroutines.*
 
-class GameView(context: Context, private val viewModel: MainViewModel) : SurfaceView(context), SurfaceHolder.Callback {
+class GameView(context: Context, private val viewModel: MainViewModel) : SurfaceView(context),
+    SurfaceHolder.Callback {
+    companion object {
+        private const val GENERATE_PERIOD = 3000L
+    }
+
     private val gameThread: GameThread
     private val player = Player(context, context.getDrawable(R.drawable.paddle)!!.toBitmap())
     private val ball = Ball(context.getDrawable(R.drawable.ball)!!.toBitmap())
     private val bricks = mutableListOf<Brick>()
-    //private val brickRows: List<List<Int>>
-    //private val brickCols: List<Int>
 
     private val screenWidth = Resources.getSystem().displayMetrics.widthPixels
     private val screenHeight = Resources.getSystem().displayMetrics.heightPixels
+
+    private val generator: Job
+    private val brickCount: Int
+
+    private val greenBrick = context.getDrawable(R.drawable.element_green_rectangle)!!.toBitmap()
 
     init {
         holder.addCallback(this)
@@ -34,10 +43,16 @@ class GameView(context: Context, private val viewModel: MainViewModel) : Surface
         setZOrderOnTop(true)
         holder.setFormat(PixelFormat.TRANSPARENT)
 
-        val brickImage = context.getDrawable(R.drawable.element_green_rectangle)!!.toBitmap()
+        brickCount = screenWidth / (greenBrick.width + Brick.DEFAULT_MARGIN)
 
-        val brick = Brick(brickImage, 1, 1, screenWidth / 2, 100)
-        bricks.add(brick)
+        generator = CoroutineScope(Dispatchers.Main).launch {
+            while (true) {
+                if (!this.isActive) break
+
+                createNewBrickLine()
+                delay(GENERATE_PERIOD)
+            }
+        }
     }
 
     override fun surfaceChanged(holder: SurfaceHolder?, format: Int, width: Int, height: Int) {
@@ -54,7 +69,6 @@ class GameView(context: Context, private val viewModel: MainViewModel) : Surface
 
     override fun draw(canvas: Canvas?) {
         super.draw(canvas)
-
         canvas ?: return
 
         canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
@@ -63,7 +77,18 @@ class GameView(context: Context, private val viewModel: MainViewModel) : Surface
         ball.draw(canvas)
 
         bricks.forEach {
-            if (it.isAlive) it.draw(canvas)
+            it.draw(canvas)
+        }
+    }
+
+    private fun createNewBrickLine() {
+        for (i in 0 until brickCount) {
+            val brick: Brick = if (i == 0)
+                Brick(greenBrick, 1, 1)
+            else
+                Brick(greenBrick, 1, 1, bricks.last().right + 20)
+
+            bricks.add(brick)
         }
     }
 
@@ -71,13 +96,15 @@ class GameView(context: Context, private val viewModel: MainViewModel) : Surface
         player.update()
         ball.update()
 
+        bricks.forEach { it.update() }
+
         if (ball.bottom >= screenHeight) {
             gameThread.stop()
         }
 
         if (ball.bottom >= player.top) {
             if (ball.centerX >= player.left && ball.centerX <= player.right) {
-                ball.reverceVelocityY()
+                ball.reverseVelocityY()
             }
         }
 
@@ -85,12 +112,12 @@ class GameView(context: Context, private val viewModel: MainViewModel) : Surface
             if (ball.right >= brick.left && ball.left <= brick.right && ball.top >= brick.top && ball.bottom <= brick.bottom) {
                 brick.hit()
 
-                if (ball.top >= brick.top && ball.bottom <= brick.bottom) ball.reverceVelocityX()
-                if (ball.left >= brick.left && ball.right <= brick.right) ball.reverceVelocityY()
+                if (ball.top >= brick.top && ball.bottom <= brick.bottom) ball.reverseVelocityX()
+                if (ball.left >= brick.left && ball.right <= brick.right) ball.reverseVelocityY()
 
                 if (brick.hp == 0) {
                     viewModel.increaseScore(brick.destroyPoints)
-                    brick.destroy()
+                    bricks.remove(brick)
                     break
                 }
             }
@@ -103,5 +130,6 @@ class GameView(context: Context, private val viewModel: MainViewModel) : Surface
 
     fun stopGame() {
         gameThread.stop()
+        GlobalScope.launch(Dispatchers.Main) { generator.cancelAndJoin() }
     }
 }

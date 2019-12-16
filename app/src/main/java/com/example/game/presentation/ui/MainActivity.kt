@@ -7,12 +7,12 @@ import androidx.databinding.DataBindingUtil
 import com.example.game.R
 import com.example.game.databinding.ActivityMainBinding
 import com.example.game.presentation.viewmodel.MainViewModel
-import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
     private val mainViewModel by viewModel<MainViewModel>()
     private lateinit var binding: ActivityMainBinding
+    private val gameView: GameView by lazy { GameView(this, mainViewModel) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,13 +23,21 @@ class MainActivity : AppCompatActivity() {
             score = mainViewModel.score
         }
 
-        val gameView = GameView(this, mainViewModel)
         gameView.layoutParams = ViewGroup.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.MATCH_PARENT
         )
-        container.addView(gameView)
 
+        binding.container.addView(gameView, 0)
+    }
+
+    override fun onResume() {
+        super.onResume()
         gameView.startGame()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        gameView.stopGame()
     }
 }

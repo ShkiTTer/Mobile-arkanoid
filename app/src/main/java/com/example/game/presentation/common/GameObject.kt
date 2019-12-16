@@ -32,6 +32,8 @@ abstract class GameObject(private val bitmap: Bitmap) {
     protected val screenWidth = Resources.getSystem().displayMetrics.widthPixels
     protected val screenHeight = Resources.getSystem().displayMetrics.heightPixels
 
+    abstract fun update()
+
     fun draw(canvas: Canvas) {
         canvas.drawBitmap(bitmap, x.toFloat(), y.toFloat(), null)
     }
