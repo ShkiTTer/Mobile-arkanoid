@@ -1,15 +1,19 @@
 package com.example.game.presentation.viewmodel
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import com.example.game.domain.usecase.SaveResultUseCase
 
-class GameViewModel: ViewModel() {
+class GameViewModel(
+    private val saveResultUseCase: SaveResultUseCase,
+    private val app: Application
+) : AndroidViewModel(app) {
     companion object {
         private const val DEFAULT_SCORE = 0
     }
 
     val score = MutableLiveData(DEFAULT_SCORE)
-
     val isPlaying = MutableLiveData<Boolean>(true)
 
     fun increaseScore(points: Int) {
@@ -23,5 +27,11 @@ class GameViewModel: ViewModel() {
 
     fun startGame() {
         isPlaying.value = true
+    }
+
+    fun saveScore() {
+        val tempScore = score.value ?: 0
+
+
     }
 }
