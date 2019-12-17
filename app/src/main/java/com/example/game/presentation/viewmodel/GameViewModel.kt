@@ -6,11 +6,9 @@ import androidx.lifecycle.ViewModel
 class GameViewModel: ViewModel() {
     companion object {
         private const val DEFAULT_SCORE = 0
-        private const val DEFAULT_HP = 3
     }
 
     val score = MutableLiveData(DEFAULT_SCORE)
-    val playerHp = MutableLiveData(DEFAULT_HP)
 
     val isPlaying = MutableLiveData<Boolean>(true)
 
