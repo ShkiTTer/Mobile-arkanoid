@@ -5,4 +5,7 @@
     <string name="btn_start">Start Game</string>
     <string name="btn_score">Score Map</string>
     <string name="btn_exit">Exit</string>
+    <string name="title_pause">Pause</string>
+    <string name="btn_resume">Resume Game</string>
+    <string name="btn_menu">Go to menu</string>
 </resources>

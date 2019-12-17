@@ -31,6 +31,14 @@ class GameActivity : AppCompatActivity() {
             else gameView.startGame()
         }
 
+        binding.btnMenu.setOnClickListener {
+            finish()
+        }
+
+        binding.btnResume.setOnClickListener {
+            gameView.startGame()
+        }
+
         gameView.layoutParams = ViewGroup.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.MATCH_PARENT
