@@ -5,22 +5,30 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.example.game.R
-import com.example.game.databinding.ActivityMainBinding
-import com.example.game.presentation.viewmodel.MainViewModel
+import com.example.game.databinding.ActivityGameBinding
+import com.example.game.presentation.viewmodel.GameViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MainActivity : AppCompatActivity() {
-    private val mainViewModel by viewModel<MainViewModel>()
-    private lateinit var binding: ActivityMainBinding
-    private val gameView: GameView by lazy { GameView(this, mainViewModel) }
+class GameActivity : AppCompatActivity() {
+    private val gameViewModel by viewModel<GameViewModel>()
+    private lateinit var binding: ActivityGameBinding
+    private val gameView: GameView by lazy { GameView(this, gameViewModel) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_game)
 
         binding.apply {
-            lifecycleOwner = this@MainActivity
-            score = mainViewModel.score
+            lifecycleOwner = this@GameActivity
+            score = gameViewModel.score
+            isPlaying = gameViewModel.isPlaying
+        }
+
+        binding.ivPause.setOnClickListener {
+            if (gameViewModel.isPlaying.value == true) {
+                gameView.stopGame()
+            }
+            else gameView.startGame()
         }
 
         gameView.layoutParams = ViewGroup.LayoutParams(

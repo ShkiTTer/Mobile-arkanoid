@@ -41,9 +41,9 @@
             android:label="@string/title_activity_map">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.game.presentation.ui.MainActivity" />
+                android:value="com.example.game.presentation.ui.GameActivity" />
         </activity>
-        <activity android:name=".presentation.ui.MainActivity">
+        <activity android:name=".presentation.ui.GameActivity">
 
         </activity>
     </application>

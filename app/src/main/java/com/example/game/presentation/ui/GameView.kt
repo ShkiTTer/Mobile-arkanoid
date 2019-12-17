@@ -14,10 +14,10 @@ import com.example.game.presentation.common.GameThread
 import com.example.game.presentation.objects.Ball
 import com.example.game.presentation.objects.Brick
 import com.example.game.presentation.objects.Player
-import com.example.game.presentation.viewmodel.MainViewModel
+import com.example.game.presentation.viewmodel.GameViewModel
 import kotlinx.coroutines.*
 
-class GameView(context: Context, private val viewModel: MainViewModel) : SurfaceView(context),
+class GameView(context: Context, private val viewModel: GameViewModel) : SurfaceView(context),
     SurfaceHolder.Callback {
     companion object {
         private const val DEFAULT_GENERATE_PERIOD = 3000L
@@ -136,12 +136,13 @@ class GameView(context: Context, private val viewModel: MainViewModel) : Surface
 
     fun startGame() {
         gameThread.start()
-
+        viewModel.startGame()
         generator = startGenerateBricks()
     }
 
     fun stopGame() {
         gameThread.stop()
+        viewModel.stopGame()
         GlobalScope.launch(Dispatchers.Main) { generator.cancelAndJoin() }
     }
 }
