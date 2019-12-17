@@ -33,6 +33,7 @@ abstract class GameObject(private val bitmap: Bitmap) {
     protected val screenHeight = Resources.getSystem().displayMetrics.heightPixels
 
     abstract fun update()
+    abstract fun increaseVelocity()
 
     fun draw(canvas: Canvas) {
         canvas.drawBitmap(bitmap, x.toFloat(), y.toFloat(), null)

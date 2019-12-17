@@ -7,10 +7,12 @@ class Brick(bitmap: Bitmap, val destroyPoints: Int, var hp: Int, x: Int = DEFAUL
     companion object {
         private const val DEFAULT_VELOCITY = 1
         private const val DEFAULT_X = 50
-        private const val DEFAULT_Y = 50
+        private const val DEFAULT_Y = 150
 
         const val DEFAULT_MARGIN = 20
     }
+
+    private var velocity = DEFAULT_VELOCITY
 
     init {
         this.x = x
@@ -18,10 +20,14 @@ class Brick(bitmap: Bitmap, val destroyPoints: Int, var hp: Int, x: Int = DEFAUL
     }
 
     override fun update() {
-        this.y += DEFAULT_VELOCITY
+        this.y += velocity
     }
 
     fun hit() {
         hp--
+    }
+
+    override fun increaseVelocity() {
+        if (velocity < 10) velocity++
     }
 }

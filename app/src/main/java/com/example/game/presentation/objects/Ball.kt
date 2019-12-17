@@ -2,6 +2,7 @@ package com.example.game.presentation.objects
 
 import android.graphics.Bitmap
 import com.example.game.presentation.common.GameObject
+import kotlin.math.absoluteValue
 
 class Ball(bitmap: Bitmap): GameObject(bitmap) {
     companion object {
@@ -32,5 +33,17 @@ class Ball(bitmap: Bitmap): GameObject(bitmap) {
 
     fun reverseVelocityY() {
         yVelocity = -yVelocity
+    }
+
+    override fun increaseVelocity() {
+        if (xVelocity.absoluteValue < 20) {
+            if (xVelocity < 0) xVelocity--
+            else xVelocity++
+        }
+
+        if (yVelocity.absoluteValue < 20) {
+            if (yVelocity < 0)  yVelocity--
+            else  yVelocity++
+        }
     }
 }

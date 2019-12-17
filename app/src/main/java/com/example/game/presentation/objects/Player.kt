@@ -12,11 +12,12 @@ import kotlin.math.absoluteValue
 class Player(private val context: Context, bitmap: Bitmap) : GameObject(bitmap), SensorEventListener {
     companion object {
         private const val BOTTOM_MARGIN = 20
-        private const val VELOCITY = 5
+        private const val DEFAULT_VELOCITY = 5
     }
 
     private val sensor: Sensor
     private var xVelocity = 0
+    private var velocity = DEFAULT_VELOCITY
 
     init {
         x = screenWidth / 2
@@ -34,7 +35,7 @@ class Player(private val context: Context, bitmap: Bitmap) : GameObject(bitmap),
         val speed = event.values[2]
 
         if (xVelocity.absoluteValue < 20) {
-            xVelocity += -(VELOCITY * speed).toInt()
+            xVelocity += -(velocity * speed).toInt()
         }
     }
 
@@ -49,5 +50,9 @@ class Player(private val context: Context, bitmap: Bitmap) : GameObject(bitmap),
         if (x + width > screenWidth) x = screenWidth - width
 
         x += xVelocity
+    }
+
+    override fun increaseVelocity() {
+        if (velocity < 15) velocity++
     }
 }

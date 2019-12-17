@@ -20,7 +20,7 @@ import kotlinx.coroutines.*
 class GameView(context: Context, private val viewModel: MainViewModel) : SurfaceView(context),
     SurfaceHolder.Callback {
     companion object {
-        private const val GENERATE_PERIOD = 3000L
+        private const val DEFAULT_GENERATE_PERIOD = 3000L
     }
 
     private val gameThread: GameThread
@@ -31,7 +31,8 @@ class GameView(context: Context, private val viewModel: MainViewModel) : Surface
     private val screenWidth = Resources.getSystem().displayMetrics.widthPixels
     private val screenHeight = Resources.getSystem().displayMetrics.heightPixels
 
-    private val generator: Job
+    private var generator: Job = Job()
+    private var generatorPeriod = DEFAULT_GENERATE_PERIOD
     private val brickCount: Int
 
     private val greenBrick = context.getDrawable(R.drawable.element_green_rectangle)!!.toBitmap()
@@ -44,15 +45,6 @@ class GameView(context: Context, private val viewModel: MainViewModel) : Surface
         holder.setFormat(PixelFormat.TRANSPARENT)
 
         brickCount = screenWidth / (greenBrick.width + Brick.DEFAULT_MARGIN)
-
-        generator = CoroutineScope(Dispatchers.Main).launch {
-            while (true) {
-                if (!this.isActive) break
-
-                createNewBrickLine()
-                delay(GENERATE_PERIOD)
-            }
-        }
     }
 
     override fun surfaceChanged(holder: SurfaceHolder?, format: Int, width: Int, height: Int) {
@@ -81,6 +73,17 @@ class GameView(context: Context, private val viewModel: MainViewModel) : Surface
         }
     }
 
+    private fun startGenerateBricks(): Job {
+        return CoroutineScope(Dispatchers.Main).launch {
+            while (true) {
+                if (!this.isActive) break
+
+                createNewBrickLine()
+                delay(generatorPeriod)
+            }
+        }
+    }
+
     private fun createNewBrickLine() {
         for (i in 0 until brickCount) {
             val brick: Brick = if (i == 0)
@@ -93,9 +96,16 @@ class GameView(context: Context, private val viewModel: MainViewModel) : Surface
     }
 
     fun update() {
+        val score = viewModel.score.value ?: 0
+
+        if (score != 0 && score % 10 == 0) {
+            player.increaseVelocity()
+            ball.increaseVelocity()
+            bricks.forEach { it.increaseVelocity() }
+        }
+
         player.update()
         ball.update()
-
         bricks.forEach { it.update() }
 
         if (ball.bottom >= screenHeight) {
@@ -126,6 +136,8 @@ class GameView(context: Context, private val viewModel: MainViewModel) : Surface
 
     fun startGame() {
         gameThread.start()
+
+        generator = startGenerateBricks()
     }
 
     fun stopGame() {
