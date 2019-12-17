@@ -1,4 +1,8 @@
 <resources>
-    <string name="app_name">Game</string>
+    <string name="app_name">Arkanoid</string>
     <string name="score">Score: %1$d</string>
+    <string name="title_activity_map">Map</string>
+    <string name="btn_start">Start Game</string>
+    <string name="btn_score">Score Map</string>
+    <string name="btn_exit">Exit</string>
 </resources>
