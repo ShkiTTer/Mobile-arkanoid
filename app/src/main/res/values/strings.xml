@@ -8,4 +8,7 @@
     <string name="title_pause">Pause</string>
     <string name="btn_resume">Resume Game</string>
     <string name="btn_menu">Go to menu</string>
+    <string name="title_end_game">Game Over</string>
+    <string name="btn_new_game">New game</string>
+    <string name="btn_close">Menu</string>
 </resources>
