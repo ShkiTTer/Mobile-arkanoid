@@ -48,6 +48,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+        mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.dark))
 
         mapViewModel.getResults()
 
@@ -61,7 +62,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
         results.forEach {
             val options = MarkerOptions()
                 .position(LatLng(it.latitude, it.longitude))
-                .draggable(false)
+                .title(getString(R.string.score, it.score))
 
             mMap.addMarker(options)
         }

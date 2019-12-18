@@ -23,7 +23,7 @@ class GameViewModel(
     val isEnded = MutableLiveData<Boolean>(false)
 
     init {
-        SmartLocation.with(app).location().oneFix().start {
+        SmartLocation.with(app).location().start {
             location = it
         }
     }
