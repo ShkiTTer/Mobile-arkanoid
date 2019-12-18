@@ -21,14 +21,21 @@ class GameActivity : AppCompatActivity() {
         binding.apply {
             lifecycleOwner = this@GameActivity
             score = gameViewModel.score
-            isPlaying = gameViewModel.isPlaying
+            isPause = gameViewModel.isPause
+            isEnded = gameViewModel.isEnded
         }
 
         binding.ivPause.setOnClickListener {
-            if (gameViewModel.isPlaying.value == true) {
-                gameView.stopGame()
+            if (gameViewModel.isEnded.value == true) return@setOnClickListener
+
+            if (gameViewModel.isPause.value == true) {
+                gameView.startGame()
+                gameViewModel.resumeGame()
             }
-            else gameView.startGame()
+            else {
+                gameView.stopGame()
+                gameViewModel.pauseGame()
+            }
         }
 
         binding.btnMenu.setOnClickListener {
@@ -37,6 +44,7 @@ class GameActivity : AppCompatActivity() {
 
         binding.btnResume.setOnClickListener {
             gameView.startGame()
+            gameViewModel.resumeGame()
         }
 
         gameView.layoutParams = ViewGroup.LayoutParams(
@@ -50,10 +58,12 @@ class GameActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         gameView.startGame()
+        gameViewModel.resumeGame()
     }
 
     override fun onPause() {
         super.onPause()
         gameView.stopGame()
+        gameViewModel.pauseGame()
     }
 }

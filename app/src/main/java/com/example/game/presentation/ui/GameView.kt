@@ -110,6 +110,7 @@ class GameView(context: Context, private val viewModel: GameViewModel) : Surface
 
         if (ball.bottom >= screenHeight) {
             gameThread.stop()
+            viewModel.endGame()
         }
 
         if (ball.bottom >= player.top) {
@@ -142,7 +143,6 @@ class GameView(context: Context, private val viewModel: GameViewModel) : Surface
 
     fun stopGame() {
         gameThread.stop()
-        viewModel.stopGame()
         GlobalScope.launch(Dispatchers.Main) { generator.cancelAndJoin() }
     }
 }

@@ -7,12 +7,12 @@ import com.example.game.R
 object BindingAdapter {
     @JvmStatic
     @BindingAdapter("app:src")
-    fun setSrc(view: ImageView, isPlaying: Boolean) {
-        if (isPlaying) {
-            view.setImageResource(R.drawable.ic_pause)
+    fun setSrc(view: ImageView, isPause: Boolean) {
+        if (isPause) {
+            view.setImageResource(R.drawable.ic_play)
         }
         else {
-            view.setImageResource(R.drawable.ic_play)
+            view.setImageResource(R.drawable.ic_pause)
         }
     }
 }

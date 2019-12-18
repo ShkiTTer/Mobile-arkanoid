@@ -13,7 +13,11 @@
             type="LiveData&lt;Integer>" />
 
         <variable
-            name="isPlaying"
+            name="isPause"
+            type="LiveData&lt;Boolean>" />
+
+        <variable
+            name="isEnded"
             type="LiveData&lt;Boolean>" />
     </data>
 
@@ -43,7 +47,7 @@
             android:layout_marginEnd="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:src="@{isPlaying}"
+            app:src="@{isPause}"
             tools:srcCompat="@drawable/ic_pause" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -57,7 +61,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:visibility="@{isPlaying ? View.GONE : View.VISIBLE}">
+            android:visibility="@{isPause ? View.VISIBLE : View.GONE}">
 
             <TextView
                 android:id="@+id/textView3"

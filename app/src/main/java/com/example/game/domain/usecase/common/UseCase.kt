@@ -14,15 +14,15 @@ abstract class UseCase<T>: CoroutineScope {
 
     abstract fun doInBackground(): T?
 
-    fun execute(callback: Callback<T>) {
+    fun execute(callback: Callback<T>? = null) {
         launch {
             try {
-                val data = async { doInBackground() }.await()
+                val data = async(bgContext) { doInBackground() }.await()
 
-                callback.onComplete(data)
+                callback?.onComplete(data)
             }
             catch (t: Throwable) {
-                callback.onFailure(t)
+                callback?.onFailure(t)
             }
         }
     }
