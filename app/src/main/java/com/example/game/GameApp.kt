@@ -9,6 +9,7 @@ import com.example.game.domain.repository.IRepository
 import com.example.game.domain.usecase.GetResultsUseCase
 import com.example.game.domain.usecase.SaveResultUseCase
 import com.example.game.presentation.viewmodel.GameViewModel
+import com.example.game.presentation.viewmodel.MapViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
@@ -23,6 +24,7 @@ class GameApp: Application() {
         single { GetResultsUseCase(get()) }
 
         viewModel { GameViewModel(get(), this@GameApp) }
+        viewModel { MapViewModel(get()) }
     }
 
     override fun onCreate() {
