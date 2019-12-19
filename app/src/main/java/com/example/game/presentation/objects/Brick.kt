@@ -10,13 +10,14 @@ class Brick(bitmap: Bitmap, val destroyPoints: Int, var hp: Int, x: Int = DEFAUL
         private const val DEFAULT_Y = 150
 
         const val DEFAULT_MARGIN = 20
+        var velocity = 0
     }
-
-    private var velocity = DEFAULT_VELOCITY
 
     init {
         this.x = x
         this.y = y
+
+        reset()
     }
 
     override fun update() {
@@ -29,5 +30,9 @@ class Brick(bitmap: Bitmap, val destroyPoints: Int, var hp: Int, x: Int = DEFAUL
 
     override fun increaseVelocity() {
         if (velocity < 10) velocity++
+    }
+
+    override fun reset() {
+        velocity = DEFAULT_VELOCITY
     }
 }

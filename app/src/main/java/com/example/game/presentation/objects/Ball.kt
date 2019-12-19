@@ -10,8 +10,7 @@ class Ball(bitmap: Bitmap): GameObject(bitmap) {
     }
 
     init {
-        x = screenWidth / 2
-        y = screenHeight / 2
+        reset()
     }
 
     var xVelocity = VELOCITY
@@ -45,5 +44,10 @@ class Ball(bitmap: Bitmap): GameObject(bitmap) {
             if (yVelocity < 0)  yVelocity--
             else  yVelocity++
         }
+    }
+
+    override fun reset() {
+        x = screenWidth / 2
+        y = screenHeight / 2
     }
 }

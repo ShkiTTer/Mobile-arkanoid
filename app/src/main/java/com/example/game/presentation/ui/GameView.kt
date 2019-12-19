@@ -23,7 +23,7 @@ class GameView(context: Context, private val viewModel: GameViewModel) : Surface
         private const val DEFAULT_GENERATE_PERIOD = 3000L
     }
 
-    private val gameThread: GameThread
+    private var gameThread: GameThread?
     private val player = Player(context, context.getDrawable(R.drawable.paddle)!!.toBitmap())
     private val ball = Ball(context.getDrawable(R.drawable.ball)!!.toBitmap())
     private val bricks = mutableListOf<Brick>()
@@ -35,13 +35,15 @@ class GameView(context: Context, private val viewModel: GameViewModel) : Surface
     private var generatorPeriod = DEFAULT_GENERATE_PERIOD
     private val brickCount: Int
 
+    private var isIncreased = false
+
     private val greenBrick = context.getDrawable(R.drawable.element_green_rectangle)!!.toBitmap()
 
     init {
         holder.addCallback(this)
 
         gameThread = GameThread(holder, this)
-        setZOrderOnTop(true)
+        setZOrderOnTop(false)
         holder.setFormat(PixelFormat.TRANSPARENT)
 
         brickCount = screenWidth / (greenBrick.width + Brick.DEFAULT_MARGIN)
@@ -52,11 +54,11 @@ class GameView(context: Context, private val viewModel: GameViewModel) : Surface
     }
 
     override fun surfaceCreated(holder: SurfaceHolder?) {
-        gameThread.start()
+        gameThread?.start()
     }
 
     override fun surfaceDestroyed(holder: SurfaceHolder?) {
-        gameThread.stop()
+        gameThread?.stop()
     }
 
     override fun draw(canvas: Canvas?) {
@@ -78,9 +80,11 @@ class GameView(context: Context, private val viewModel: GameViewModel) : Surface
             while (true) {
                 if (!this.isActive) break
 
-                createNewBrickLine()
                 delay(generatorPeriod)
+                createNewBrickLine()
             }
+
+            return@launch
         }
     }
 
@@ -98,10 +102,11 @@ class GameView(context: Context, private val viewModel: GameViewModel) : Surface
     fun update() {
         val score = viewModel.score.value ?: 0
 
-        if (score != 0 && score % 10 == 0) {
+        if (score != 0 && score % 10 == 0 && !isIncreased) {
             player.increaseVelocity()
             ball.increaseVelocity()
-            bricks.forEach { it.increaseVelocity() }
+            bricks.first().increaseVelocity()
+            isIncreased = true
         }
 
         player.update()
@@ -109,7 +114,7 @@ class GameView(context: Context, private val viewModel: GameViewModel) : Surface
         bricks.forEach { it.update() }
 
         if (ball.bottom >= screenHeight) {
-            gameThread.stop()
+            gameThread?.stop()
             viewModel.endGame()
         }
 
@@ -122,6 +127,7 @@ class GameView(context: Context, private val viewModel: GameViewModel) : Surface
         for (brick in bricks) {
             if (ball.right >= brick.left && ball.left <= brick.right && ball.top >= brick.top && ball.bottom <= brick.bottom) {
                 brick.hit()
+                isIncreased = false
 
                 if (ball.top >= brick.top && ball.bottom <= brick.bottom) ball.reverseVelocityX()
                 if (ball.left >= brick.left && ball.right <= brick.right) ball.reverseVelocityY()
@@ -136,13 +142,15 @@ class GameView(context: Context, private val viewModel: GameViewModel) : Surface
     }
 
     fun startGame() {
-        gameThread.start()
+        gameThread = GameThread(holder, this)
+        gameThread?.start()
         viewModel.startGame()
         generator = startGenerateBricks()
     }
 
     fun stopGame() {
-        gameThread.stop()
+        gameThread?.stop()
+        gameThread = null
         GlobalScope.launch(Dispatchers.Main) { generator.cancelAndJoin() }
     }
 }

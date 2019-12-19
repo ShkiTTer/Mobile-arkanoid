@@ -1,5 +1,6 @@
 package com.example.game.presentation.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
@@ -7,6 +8,7 @@ import androidx.databinding.DataBindingUtil
 import com.example.game.R
 import com.example.game.databinding.ActivityGameBinding
 import com.example.game.presentation.viewmodel.GameViewModel
+import kotlinx.android.synthetic.main.activity_game.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class GameActivity : AppCompatActivity() {
@@ -39,6 +41,16 @@ class GameActivity : AppCompatActivity() {
         }
 
         binding.btnMenu.setOnClickListener {
+            finish()
+        }
+
+        btnClose.setOnClickListener {
+            finish()
+        }
+
+        btnNewGame.setOnClickListener {
+            val intent = Intent(this, GameActivity::class.java)
+            startActivity(intent)
             finish()
         }
 

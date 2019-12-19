@@ -20,8 +20,7 @@ class Player(private val context: Context, bitmap: Bitmap) : GameObject(bitmap),
     private var velocity = DEFAULT_VELOCITY
 
     init {
-        x = screenWidth / 2
-        y = screenHeight - height - BOTTOM_MARGIN
+        reset()
 
         val manager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
         sensor = manager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
@@ -54,5 +53,10 @@ class Player(private val context: Context, bitmap: Bitmap) : GameObject(bitmap),
 
     override fun increaseVelocity() {
         if (velocity < 15) velocity++
+    }
+
+    override fun reset() {
+        x = screenWidth / 2
+        y = screenHeight - height - BOTTOM_MARGIN
     }
 }

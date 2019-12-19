@@ -25,6 +25,7 @@ class GameThread(private val holder: SurfaceHolder, private val gameView: GameVi
 
     private fun run() {
         launch {
+            println(Thread.activeCount())
             var startTime: Long
             var duringTime: Long
             var waitTime: Long
@@ -60,6 +61,8 @@ class GameThread(private val holder: SurfaceHolder, private val gameView: GameVi
 
                 delay(waitTime)
             }
+
+            return@launch
         }
     }
 

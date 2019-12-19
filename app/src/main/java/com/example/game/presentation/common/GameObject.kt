@@ -34,6 +34,7 @@ abstract class GameObject(private val bitmap: Bitmap) {
 
     abstract fun update()
     abstract fun increaseVelocity()
+    abstract fun reset()
 
     fun draw(canvas: Canvas) {
         canvas.drawBitmap(bitmap, x.toFloat(), y.toFloat(), null)
