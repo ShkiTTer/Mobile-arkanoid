@@ -111,7 +111,6 @@ class GameView(context: Context, private val viewModel: GameViewModel) : Surface
 
         player.update()
         ball.update()
-        bricks.forEach { it.update() }
 
         if (ball.bottom >= screenHeight) {
             gameThread?.stop()
@@ -125,12 +124,18 @@ class GameView(context: Context, private val viewModel: GameViewModel) : Surface
         }
 
         for (brick in bricks) {
-            if (ball.right >= brick.left && ball.left <= brick.right && ball.top >= brick.top && ball.bottom <= brick.bottom) {
+            brick.update()
+
+            if (brick.bottom >= screenHeight) {
+                gameThread?.stop()
+                viewModel.endGame()
+            }
+            else if (ball.right >= brick.left && ball.left <= brick.right && ball.bottom >= brick.top && ball.top <= brick.bottom) {
                 brick.hit()
                 isIncreased = false
 
-                if (ball.top >= brick.top && ball.bottom <= brick.bottom) ball.reverseVelocityX()
-                if (ball.left >= brick.left && ball.right <= brick.right) ball.reverseVelocityY()
+                if (ball.bottom >= brick.top && ball.top <= brick.bottom) ball.reverseVelocityX()
+                if (ball.right >= brick.left && ball.left <= brick.right) ball.reverseVelocityY()
 
                 if (brick.hp == 0) {
                     viewModel.increaseScore(brick.destroyPoints)

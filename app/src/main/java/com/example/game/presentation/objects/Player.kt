@@ -23,7 +23,7 @@ class Player(private val context: Context, bitmap: Bitmap) : GameObject(bitmap),
         reset()
 
         val manager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        sensor = manager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
+        sensor = manager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
 
         manager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_GAME)
     }
@@ -31,10 +31,12 @@ class Player(private val context: Context, bitmap: Bitmap) : GameObject(bitmap),
     override fun onSensorChanged(event: SensorEvent?) {
         event ?: return
 
-        val speed = event.values[2]
+        val speed = event.values[0]
 
-        if (xVelocity.absoluteValue < 20) {
-            xVelocity += -(velocity * speed).toInt()
+        if (xVelocity.absoluteValue <= 15) {
+            xVelocity += -speed.toInt()
+
+            if (xVelocity > 15) xVelocity = 15
         }
     }
 
@@ -45,8 +47,14 @@ class Player(private val context: Context, bitmap: Bitmap) : GameObject(bitmap),
     override fun update() {
         if (x < 0 || x + width > screenWidth) xVelocity = 0
 
-        if (x < 0) x = 0
-        if (x + width > screenWidth) x = screenWidth - width
+        if (x < 0) {
+            x = 0
+            xVelocity = 0
+        }
+        if (x + width > screenWidth) {
+            x = screenWidth - width
+            xVelocity = 0
+        }
 
         x += xVelocity
     }
